@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Stock_Market_API.Data;
+using Stock_Market_API.Mappers;
 
 namespace Stock_Market_API.Controllers
 {
@@ -16,7 +17,7 @@ namespace Stock_Market_API.Controllers
         [HttpGet]
         public IActionResult GetAllStocks()
         {
-            var stocks = _context.Stocks.ToList();
+            var stocks = _context.Stocks.ToList().Select(s => StockMappers.ToStockDTO(s));
             return Ok(stocks);
         }
 
