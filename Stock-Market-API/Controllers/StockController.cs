@@ -33,7 +33,7 @@ namespace Stock_Market_API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetStockById(int id)
         {
-            var stock = await _context.Stocks.FindAsync(id);
+            var stock = await _stockRepo.GetByIdAsync(id);
             if (stock == null) return NotFound();
 
             return Ok(stock);
@@ -43,8 +43,7 @@ namespace Stock_Market_API.Controllers
         public async Task<IActionResult> CreateStock([FromBody] CreateStockRequestDTO stockDTO)
         {
             var stockModel = StockMappers.ToStockFromCreateDTO(stockDTO);
-            await _context.Stocks.AddAsync(stockModel);
-            await _context.SaveChangesAsync();
+            await _stockRepo.CreateAsync(stockModel);
 
             // execute GetStockById with the created stock ID then return in the form of ToStockDTO()
             return CreatedAtAction(nameof(GetStockById), new { id = stockModel.Id }, StockMappers.ToStockDTO(stockModel));
@@ -54,17 +53,8 @@ namespace Stock_Market_API.Controllers
         [Route("{id}")]
         public async Task<IActionResult> UpdateStock([FromRoute] int id, [FromBody] UpdateStockRequestDTO updateDTO)
         {
-            var stockModel = await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);
+            var stockModel = await _stockRepo.UpdateAsync(id, updateDTO);
             if (stockModel == null) return NotFound();
-
-            stockModel.Symbol = updateDTO.Symbol;
-            stockModel.CompanyName = updateDTO.CompanyName;
-            stockModel.MarketCap = updateDTO.MarketCap;
-            stockModel.Purchase = updateDTO.Purchase;
-            stockModel.LastDiv = updateDTO.LastDiv;
-            stockModel.Industry = updateDTO.Industry;
-
-            await _context.SaveChangesAsync();
 
             return Ok(StockMappers.ToStockDTO(stockModel));
         }
@@ -73,11 +63,8 @@ namespace Stock_Market_API.Controllers
         [Route("{id}")]
         public async Task<IActionResult> DeleteStock([FromRoute] int id)
         {
-            var stockModel = _context.Stocks.FirstOrDefault(x => x.Id == id);
+            var stockModel = await _stockRepo.DeleteAsync(id);
             if (stockModel == null) return NotFound();
-
-            _context.Stocks.Remove(stockModel);
-            await _context.SaveChangesAsync();
 
             //return NoContent();
             return Ok("Stock Deleted");
