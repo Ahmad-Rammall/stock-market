@@ -52,5 +52,13 @@ namespace Stock_Market_API.Controllers
 
             return Ok(CommentMappers.ToCommentDTO(comment));
         }
+        [HttpDelete("{commentId}")]
+        public async Task<IActionResult> DeleteComment([FromRoute] int commentId)
+        {
+            var comment = await _commentRepo.DeleteCommentAsync(commentId);
+            if (comment == null) return BadRequest("Comment Not Found!");
+
+            return Ok(comment);
+        }
     }
 }

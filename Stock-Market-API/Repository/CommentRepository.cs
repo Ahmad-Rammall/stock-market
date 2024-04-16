@@ -22,6 +22,16 @@ namespace Stock_Market_API.Repository
             return commentModel;
         }
 
+        public async Task<Comment> DeleteCommentAsync(int commentId)
+        {
+            var comment = await _context.Comments.FindAsync(commentId);
+            if (comment == null) return null;
+
+            _context.Remove(comment);
+            await _context.SaveChangesAsync();
+            return comment;
+        }
+
         public async Task<List<Comment>> GetAllAsync()
         {
             return await _context.Comments.ToListAsync();
