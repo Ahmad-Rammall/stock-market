@@ -12,9 +12,14 @@ namespace Stock_Market_API.Repository
         {
             _context = context;
         }
-        async Task<List<Comment>> ICommentRepository.GetAllAsync()
+        public async Task<List<Comment>> GetAllAsync()
         {
             return await _context.Comments.ToListAsync();
+        }
+
+        public async Task<Comment> GetByIdAsync(int id)
+        {
+            return await _context.Comments.FindAsync(id);
         }
     }
 }
