@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 using Stock_Market_API.Data;
 using Stock_Market_API.Interfaces;
 using Stock_Market_API.Models;
@@ -29,6 +30,19 @@ namespace Stock_Market_API.Repository
         public async Task<Comment> GetByIdAsync(int id)
         {
             return await _context.Comments.FindAsync(id);
+        }
+
+        public async Task<Comment> UpdateCommentAsync(int commentId, Comment commentModel)
+        {
+            var existingComment = await _context.Comments.FindAsync(commentId);
+            if (existingComment == null) return null;
+
+            existingComment.Title = commentModel.Title;
+            existingComment.Content = commentModel.Content;
+
+            await _context.SaveChangesAsync();
+
+            return existingComment;
         }
     }
 }

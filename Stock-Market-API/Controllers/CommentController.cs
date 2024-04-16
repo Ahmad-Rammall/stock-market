@@ -2,6 +2,7 @@
 using Stock_Market_API.DTOs.Comment;
 using Stock_Market_API.Interfaces;
 using Stock_Market_API.Mappers;
+using System.Runtime.InteropServices;
 
 namespace Stock_Market_API.Controllers
 {
@@ -41,6 +42,15 @@ namespace Stock_Market_API.Controllers
             await _commentRepo.CreateCommentAsync(commentModel);
 
             return CreatedAtAction(nameof(GetCommentById), new {id = commentModel}, CommentMappers.ToCommentDTO(commentModel));
+        }
+        [HttpPut("{commentId}")]
+        public async Task<IActionResult> Updatecomment([FromRoute]int commentId, [FromBody] UpdateCommentDTO commentDTO)
+        {
+            var comment = await _commentRepo.UpdateCommentAsync(commentId, CommentMappers.ToCommentFromUpdateDTO(commentDTO));
+            if(comment == null) return NotFound();
+
+
+            return Ok(CommentMappers.ToCommentDTO(comment));
         }
     }
 }

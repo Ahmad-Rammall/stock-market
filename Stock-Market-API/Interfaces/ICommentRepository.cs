@@ -7,5 +7,6 @@ namespace Stock_Market_API.Interfaces
         Task<List<Comment>> GetAllAsync();
         Task<Comment> GetByIdAsync(int id);
         Task<Comment> CreateCommentAsync(Comment commentModel);
+        Task<Comment> UpdateCommentAsync(int commentId, Comment commentModel);
     }
 }

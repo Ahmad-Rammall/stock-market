@@ -26,5 +26,13 @@ namespace Stock_Market_API.Mappers
                 StockId = stockId,
             };
         }
+        public static Comment ToCommentFromUpdateDTO(UpdateCommentDTO commentModel)
+        {
+            return new Comment
+            {
+                Title = commentModel.Title,
+                Content = commentModel.Content,
+            };
+        }
     }
 }
