@@ -1,5 +1,6 @@
 ﻿using Stock_Market_API.DTOs.Stock;
 using Stock_Market_API.Models;
+using Stock_Market_API.Mappers;
 using System.Runtime.CompilerServices;
 
 namespace Stock_Market_API.Mappers
@@ -16,7 +17,8 @@ namespace Stock_Market_API.Mappers
                 Purchase = StockModel.Purchase,
                 LastDiv = StockModel.LastDiv,
                 Industry = StockModel.Industry,
-                MarketCap = StockModel.MarketCap
+                MarketCap = StockModel.MarketCap,
+                Comments = StockModel.Comments.Select(comment => CommentMappers.ToCommentDTO(comment)).ToList()
             };
         }
 

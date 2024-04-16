@@ -1,8 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Stock_Market_API.DTOs.Comment;
 
 namespace Stock_Market_API.DTOs.Stock
 {
-    // We Don't Want to Return Comments Back
     public class StockDTO
     {
         public int Id { get; set; }
@@ -12,5 +11,6 @@ namespace Stock_Market_API.DTOs.Stock
         public decimal LastDiv { get; set; }
         public string Industry { get; set; } = string.Empty;
         public long MarketCap { get; set; }
+        public List<CommentDTO> Comments { get; set; }
     }
 }
