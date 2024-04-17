@@ -5,6 +5,7 @@ using Stock_Market_API.DTOs.Stock;
 using Stock_Market_API.Models;
 using Microsoft.EntityFrameworkCore;
 using Stock_Market_API.Interfaces;
+using Stock_Market_API.Helpers;
 
 namespace Stock_Market_API.Controllers
 {
@@ -22,9 +23,9 @@ namespace Stock_Market_API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllStocks()
+        public async Task<IActionResult> GetAllStocks([FromQuery] QueryObject query)
         {
-            var stocks = await _stockRepo.GetAllAsync();
+            var stocks = await _stockRepo.GetAllAsync(query);
             var stockDto = stocks.Select(s => StockMappers.ToStockDTO(s));
 
             return Ok(stockDto);
