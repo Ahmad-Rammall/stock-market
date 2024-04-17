@@ -5,6 +5,7 @@ using Stock_Market_API.Helpers;
 using Stock_Market_API.Interfaces;
 using Stock_Market_API.Mappers;
 using Stock_Market_API.Models;
+using System.Collections.Generic;
 
 namespace Stock_Market_API.Repository
 {
@@ -37,7 +38,7 @@ namespace Stock_Market_API.Repository
         public async Task<List<Stock>> GetAllAsync(QueryObject query)
         {
             var stocks = _context.Stocks.Include(c => c.Comments).AsQueryable();
-            if(!string.IsNullOrWhiteSpace(query.CompanyName))
+            if (!string.IsNullOrWhiteSpace(query.CompanyName))
             {
                 stocks = stocks.Where(stock => stock.CompanyName.Contains(query.CompanyName));
             }
@@ -47,12 +48,18 @@ namespace Stock_Market_API.Repository
             }
             if (!string.IsNullOrWhiteSpace(query.SortBy))
             {
-                if(query.SortBy.Equals("Symbol", StringComparison.OrdinalIgnoreCase))
+                if (query.SortBy.Equals("Symbol", StringComparison.OrdinalIgnoreCase))
                     stocks = query.IsDescending ? stocks.OrderByDescending(stock => stock.Symbol)
                         : stocks.OrderBy(stock => stock.Symbol);
             }
 
-            return await stocks.ToListAsync();
+            // Skip(skipNumber): Skips the calculated number of items.
+            // Take(query.PageSize): Retrieves the specified number of items for the current page.
+            // ToListAsync(): Executes the query asynchronously and returns the result as a list.
+
+            var skipNumber = (query.PageNumber - 1) * query.PageSize;
+
+            return await stocks.Skip(skipNumber).Take(query.PageSize).ToListAsync();
         }
 
         public async Task<Stock?> GetByIdAsync(int id)
