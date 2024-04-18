@@ -7,6 +7,7 @@ using Stock_Market_API.Interfaces;
 using Stock_Market_API.Models;
 using Stock_Market_API.Repository;
 using Microsoft.IdentityModel.Tokens;
+using Stock_Market_API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -62,6 +63,7 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddScoped<IStockRepository, StockRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 var app = builder.Build();
 
